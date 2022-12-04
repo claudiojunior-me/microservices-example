@@ -22,4 +22,6 @@ export class User extends Model {
 
   @Column
   company: string;
+
+  active: boolean;
 }

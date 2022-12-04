@@ -7,8 +7,15 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  async findAll(): Promise<User[]> {
+    const usersList = await this.usersService.findAll();
+
+    return usersList
+      .map((user) => {
+        user.active = Math.random() > 0.5 ? true : false;
+        return user;
+      })
+      .filter((user) => user.active);
   }
 
   @Get(':id')

@@ -12,6 +12,21 @@ services:
       MYSQL_PASSWORD: MainPassword
     volumes:
       - db-volume:/var/lib/mysql
+    networks:
+      - my-networks
+
+  user-service:
+    build: ./apps/users-microservice
+    depends_on:
+      - user-database
+    ports:
+      - "3000:3000"
+    networks:
+      - my-networks
 
 volumes:
   db-volume:
+
+networks:
+  my-networks:
+    driver: bridge
