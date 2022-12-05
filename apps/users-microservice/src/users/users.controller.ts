@@ -10,12 +10,16 @@ export class UsersController {
   async findAll(): Promise<User[]> {
     const usersList = await this.usersService.findAll();
 
-    return usersList
-      .map((user) => {
-        user.active = Math.random() > 0.5 ? true : false;
-        return user;
-      })
-      .filter((user) => user.active);
+    const tempList = [...usersList].map((user) => {
+      user.active = Math.random() > 0.5 ? true : false;
+      return user;
+    });
+
+    tempList.forEach((item) => {
+      item.active = !item.active;
+    });
+
+    return [...tempList].filter((user) => user.active);
   }
 
   @Get(':id')

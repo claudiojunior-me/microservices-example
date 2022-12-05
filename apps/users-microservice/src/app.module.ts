@@ -20,7 +20,7 @@ import { UsersModule } from './users/users.module';
     // }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: '0.0.0.0',
+      host: 'user-database',
       port: 3306,
       username: 'MainUser',
       password: 'MainPassword',
