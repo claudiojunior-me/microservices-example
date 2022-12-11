@@ -6,15 +6,14 @@ metadata:
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
-    io.kompose.service: user-service
-  name: user-service
+    home.lab: user-database
+  name: user-database
 spec:
   ports:
-    - name: "3000"
-      port: 3000
-      targetPort: 3000
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
   selector:
-    io.kompose.service: user-service
-  type: NodePort
+    home.lab: user-database
 status:
   loadBalancer: {}

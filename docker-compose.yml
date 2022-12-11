@@ -13,20 +13,20 @@ services:
     volumes:
       - db-volume:/var/lib/mysql
     networks:
-      - my-networks
+      - micro-lab-network
 
-  user-service:
+  user-app:
     build: ./apps/users-microservice
     depends_on:
       - user-database
     ports:
       - "3000:3000"
     networks:
-      - my-networks
+      - micro-lab-network
 
 volumes:
   db-volume:
 
 networks:
-  my-networks:
+  micro-lab-network:
     driver: bridge

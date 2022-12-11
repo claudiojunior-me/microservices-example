@@ -2,13 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   creationTimestamp: null
-  name: my-networks
+  name: micro-lab-network
 spec:
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              io.kompose.network/my-networks: "true"
+              home.lab/micro-lab-network: "true"
   podSelector:
     matchLabels:
-      io.kompose.network/my-networks: "true"
+      home.lab/micro-lab-network: "true"
