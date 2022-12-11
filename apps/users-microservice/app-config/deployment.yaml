@@ -9,7 +9,7 @@ metadata:
     home.lab: user-app
   name: user-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       home.lab: user-app
@@ -32,7 +32,7 @@ spec:
             - containerPort: 3000
           resources:
             requests:
-              cpu: "250m"
+              cpu: "0.1"
             limits:
               cpu: "0.5"
               memory: 200M
