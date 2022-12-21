@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AppController } from './app.controller';
 import { AppLoggerMiddleware } from './app.logger';
@@ -8,23 +9,14 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'MainUser',
-    //   password: 'MainPassword',
-    //   database: 'Backoffice',
-    //   entities: [User],
-    //   synchronize: true,
-    // }),
+    ConfigModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: 'user-database',
-      port: 3306,
-      username: 'MainUser',
-      password: 'MainPassword',
-      database: 'Backoffice',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
       synchronize: true,
       models: [User],
     }),

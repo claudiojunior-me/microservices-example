@@ -25,7 +25,18 @@ spec:
         home.lab: user-app
     spec:
       containers:
-        - image: claudiojunior/app-users
+        - env:
+            - name: DB_HOST
+              value: micro-lab-db
+            - name: DB_PORT
+              value: 3306
+            - name: DB_USER
+              value: MainUser
+            - name: DB_PASSWORD
+              value: MainPassword
+            - name: DB_DATABASE
+              value: RootPassword
+          image: claudiojunior/app-users
           imagePullPolicy: IfNotPresent
           name: user-app
           ports:
