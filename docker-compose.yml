@@ -1,24 +1,24 @@
 version: '3.5'
 
 services:
-  user-database:
-    build: ./databases/users
+  micro-lab-db:
+    build: ./db
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: RootPassword
-      MYSQL_DATABASE: Backoffice
-      MYSQL_USER: MainUser
-      MYSQL_PASSWORD: MainPassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db-volume:/var/lib/mysql
     networks:
       - micro-lab-network
 
-  user-app:
+  micro-lab-app-user:
     build: ./apps/users-microservice
     depends_on:
-      - user-database
+      - micro-lab-db
     ports:
       - "3000:3000"
     networks:

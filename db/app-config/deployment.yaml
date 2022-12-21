@@ -4,15 +4,14 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.26.0 (40646f47)
-  creationTimestamp: null
   labels:
-    home.lab: user-database
-  name: user-database
+    home.lab: micro-lab-db
+  name: micro-lab-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      home.lab: user-database
+      home.lab: micro-lab-db
   strategy:
     type: Recreate
   template:
@@ -20,10 +19,9 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.26.0 (40646f47)
-      creationTimestamp: null
       labels:
         home.lab/micro-lab-network: "true"
-        home.lab: user-database
+        home.lab: micro-lab-db
     spec:
       containers:
         - env:
@@ -35,12 +33,15 @@ spec:
               value: RootPassword
             - name: MYSQL_USER
               value: MainUser
-          image: claudiojunior/db-users
+          image: claudiojunior/microlab-db
           imagePullPolicy: IfNotPresent
-          name: user-database
+          name: micro-lab-db
           ports:
             - containerPort: 3306
-          resources: {}
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 200M
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: db-volume
