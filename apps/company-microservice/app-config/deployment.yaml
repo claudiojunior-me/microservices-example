@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    home.lab: user-app
+  name: user-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      home.lab: user-app
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        home.lab/micro-lab-network: "true"
+        home.lab: user-app
+    spec:
+      containers:
+        - env:
+            - name: DB_HOST
+              value: micro-lab-db
+            - name: DB_PORT
+              value: 3306
+            - name: DB_USER
+              value: MainUser
+            - name: DB_PASSWORD
+              value: MainPassword
+            - name: DB_DATABASE
+              value: RootPassword
+          image: claudiojunior/app-users
+          imagePullPolicy: IfNotPresent
+          name: user-app
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: "0.1"
+            limits:
+              cpu: "0.5"
+              memory: 200M
+      restartPolicy: Always
+status: {}
