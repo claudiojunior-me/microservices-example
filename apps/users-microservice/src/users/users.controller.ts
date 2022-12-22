@@ -1,15 +1,22 @@
-import { HttpService } from '@nestjs/axios';
-import { Controller, Get, Param } from '@nestjs/common';
-import axios, { AxiosResponse } from 'axios';
+import { CACHE_MANAGER, Controller, Get, Inject, Param } from '@nestjs/common';
+import { Cache } from 'cache-manager';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   @Get()
   async findAll(): Promise<User[]> {
+    const cachedUser = await this.cacheManager.get(`get_user_list`);
+    if (cachedUser) {
+      return cachedUser as User[];
+    }
+
     const usersList = await this.usersService.findAll();
 
     const tempList = [...usersList].map((user) => {
@@ -24,12 +31,12 @@ export class UsersController {
 
     const filteredList = [...tempList].filter((user) => user.active);
 
-    return await Promise.all(
+    const mappedList = await Promise.all(
       filteredList.map(async (item) => {
         item.company = null;
 
         try {
-          item.company = await this.usersService.findCompany(item.id);
+          item.company = await this.usersService.findCompany('5');
         } catch (err) {
           console.error(err);
         }
@@ -37,10 +44,20 @@ export class UsersController {
         return item;
       }),
     );
+
+    this.cacheManager.set(`get_user_list`, mappedList);
+    return mappedList;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<User> {
+    const cachedUser = await this.cacheManager.get(`get_user_${id}`);
+    if (cachedUser) {
+      return cachedUser as User;
+    }
+
+    const userData = await this.usersService.findOne(id);
+    this.cacheManager.set(`get_user_${id}`, userData);
+    return userData;
   }
 }

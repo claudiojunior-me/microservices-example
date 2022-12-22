@@ -1,13 +1,30 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  CacheInterceptor,
+  CACHE_MANAGER,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  UseInterceptors
+} from '@nestjs/common';
+import { Cache } from 'cache-manager';
 import { Company } from './company.entity';
 import { CompaniesService } from './company.service';
 
+const CACHE_KEY_FILTERED_LIST = 'companiesFilteredList';
+
 @Controller('companies')
+@UseInterceptors(CacheInterceptor)
 export class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) {}
+  constructor(
+    private readonly companiesService: CompaniesService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   @Get()
   async findAll(): Promise<Company[]> {
+    console.log('CACHE MISS');
+
     const companiesList = await this.companiesService.findAll();
 
     const tempList = [...companiesList].map((company) => {
@@ -19,7 +36,10 @@ export class CompaniesController {
       item.active = !item.active;
     });
 
-    return [...tempList].filter((company) => company.active);
+    const companiesFilteredList = [...tempList].filter(
+      (company) => company.active,
+    );
+    return companiesFilteredList;
   }
 
   @Get(':id')
