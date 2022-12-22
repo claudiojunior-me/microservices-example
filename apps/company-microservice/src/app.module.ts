@@ -18,6 +18,7 @@ import { CompaniesModule } from './company/company.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       synchronize: true,
+      logging: false,
       models: [Company],
     }),
     CompaniesModule,

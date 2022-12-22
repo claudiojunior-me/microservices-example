@@ -12,13 +12,6 @@ export class UsersController {
   async findAll(): Promise<User[]> {
     const usersList = await this.usersService.findAll();
 
-    const getCompanyData = async (
-      id: string,
-    ): Promise<AxiosResponse<any, any>> => {
-      const response = await axios.get(`http://localhost:3001/companies/${id}`);
-      return response;
-    };
-
     const tempList = [...usersList].map((user) => {
       user.active = Math.random() > 0.5 ? true : false;
       // getCompanyData(user.id);
@@ -29,12 +22,21 @@ export class UsersController {
       item.active = !item.active;
     });
 
-    return [...tempList]
-      .filter((user) => user.active)
-      .map((item) => {
-        // getCompanyData(item.id);
+    const filteredList = [...tempList].filter((user) => user.active);
+
+    return await Promise.all(
+      filteredList.map(async (item) => {
+        item.company = null;
+
+        try {
+          item.company = await this.usersService.findCompany(item.id);
+        } catch (err) {
+          console.error(err);
+        }
+
         return item;
-      });
+      }),
+    );
   }
 
   @Get(':id')
