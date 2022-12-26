@@ -1,4 +1,4 @@
-name: Docker Image CI - App Users
+name: Docker Image CI - App company
 
 on:
   push:
@@ -21,9 +21,9 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASS
     
     - name: Build the Docker image
-      run: cd ./apps/users-microservice && docker build . --file Dockerfile --tag claudio1091/app-users:$(date +%s)
+      run: cd ./apps/company-microservice && docker build . --file Dockerfile --tag claudio1091/app-company:$(date +%s)
 
     - name: Docker push
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
-      run: docker push claudio1091/app-users
+      run: docker push claudio1091/app-company
