@@ -21,4 +21,6 @@ jobs:
       run:
         docker login -u $DOCKER_USER -p $DOCKER_PASS
     - name: Build the Docker image
-      run: docker build . --file ./apps/users-microservice/Dockerfile --tag claudio1091/app-users:$(date +%s)
+      run: cd ./apps/users-microservice && docker build . --file Dockerfile --tag claudio1091/app-users:$(date +%s)
+    - name: Docker push
+      run: docker push ${{secrets.DOCKER_USER}}/app-users
