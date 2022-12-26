@@ -26,4 +26,4 @@ jobs:
     - name: Docker push
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
-      run: docker push ${{DOCKER_USER}}/app-users
+      run: docker push $DOCKER_USER/app-users
